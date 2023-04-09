@@ -1,0 +1,8 @@
+<library path="craft_control">
+  <class name="craft_control/RudderServo"
+         type="craft_control::RudderServo" base_class_type="controller_interface::ControllerInterface">
+  <description>
+    RudderServo ros2_control controller.
+  </description>
+  </class>
+</library>
