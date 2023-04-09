@@ -15,21 +15,24 @@
 #ifndef CRAFT_CONTROL__VALIDATE_RUDDER_SERVO_PARAMETERS_HPP_
 #define CRAFT_CONTROL__VALIDATE_RUDDER_SERVO_PARAMETERS_HPP_
 
+#include <fmt/format.h>
 #include <string>
+#include <tl/expected.hpp>
 
 #include "parameter_traits/parameter_traits.hpp"
 
 namespace parameter_traits
 {
-Result forbidden_interface_name_prefix(rclcpp::Parameter const & parameter)
+tl::expected<void, std::string> forbidden_interface_name_prefix(rclcpp::Parameter const & parameter)
 {
   auto const & interface_name = parameter.as_string();
 
   if (interface_name.rfind("blup_", 0) == 0) {
-    return ERROR("'interface_name' parameter can not start with 'blup_'");
+    return tl::make_unexpected(
+      fmt::format("'interface_name' parameter can not start with 'blup_'"));
   }
 
-  return OK;
+  return {};
 }
 
 }  // namespace parameter_traits
