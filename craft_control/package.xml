@@ -10,7 +10,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <build_depend>generate_parameter_library</build_depend>
-  <build_depend>libexpected-dev</build_depend>
+  <build_depend>tl_expected</build_depend>
 
   <depend>control_msgs</depend>
 
