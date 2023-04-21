@@ -226,7 +226,7 @@
       <!-- Maximum Servo Speed .24 sec/60 degrees @ 6.0V -->
       <!-- 4.36 rad/s max speed -->
       <!-- 90 deg is 1.5708 rad, 180 deg +- 1.57 rad servo range of motion -->
-      <limit effort="0" lower="${radians(-90)}" upper="${radians(90)}" velocity="4.36" />
+      <limit effort="1.1369" lower="${radians(-90)}" upper="${radians(90)}" velocity="4.36" />
     </joint>
     <!-- END JOINTS -->
 
