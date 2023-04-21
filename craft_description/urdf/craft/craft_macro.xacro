@@ -194,7 +194,7 @@
     </joint>
     <!-- joint 2 -->
     <joint name="${prefix}propeller_joint" type="continuous">
-		  <origin xyz="-2.11292e-18 0.385445 0.0889" rpy="1.5708 -0.187437 -3.49069e-15" />
+		  <origin xyz="-2.11292e-18 0.385445 0.0889" rpy="${radians(90)} -0.187437 -3.49069e-15" />
       <parent link="${prefix}hullassm" />
       <child link="${prefix}propeller" />
       <axis xyz="0 0 1" />
@@ -208,19 +208,25 @@
     </joint>
     <!-- joint 4 -->
     <joint name="${prefix}hull_cargo" type="fixed">
-		  <origin xyz="-2.77556e-17 0.3556 0.3048" rpy="-1.5708 -0 -4.62274e-32" />
+		  <origin xyz="-2.77556e-17 0.3556 0.3048" rpy="${radians(-90)} -0 -4.62274e-32" />
       <parent link="${prefix}hullassm" />
       <child link="${prefix}servocargoassm" />
       <axis xyz="0 0 1" />
     </joint>
     <!-- joint 5 -->
     <joint name="${prefix}servo_joint" type="revolute">
-      <origin xyz="3.43338e-16 -0.005715 0.074295" rpy="1.5708 0 -1.03735e-13" />
+      <origin xyz="3.43338e-16 -0.005715 0.074295" rpy="${radians(90)} 0 -1.03735e-13" />
       <parent link="${prefix}servocargoassm" />
       <child link="${prefix}rudder" />
       <axis xyz="0 0 1" />
-      <!-- NOTE future try lower="${radians(-90)}" upper="${radians(90)}" -->
-      <limit effort="0" lower="-1.5708" upper="1.5708" velocity="4.36" />
+      <!-- effort is torque in nm for rotational joint -->
+      <!-- spektrum s605 servo max torque 161 oz-in @ 6v ("9 kg")-->
+      <!-- converts 1.1369098451666613 N-m max torque -->
+      <!-- velocity is rad/s. for revolute -->
+      <!-- Maximum Servo Speed .24 sec/60 degrees @ 6.0V -->
+      <!-- 4.36 rad/s max speed -->
+      <!-- 90 deg is 1.5708 rad, 180 deg +- 1.57 rad servo range of motion -->
+      <limit effort="0" lower="${radians(-90)}" upper="${radians(90)}" velocity="4.36" />
     </joint>
     <!-- END JOINTS -->
 
