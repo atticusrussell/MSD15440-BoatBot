@@ -3,162 +3,200 @@
 
   <xacro:include filename="$(find craft_description)/urdf/common.xacro" />
 
+  <xacro:arg name="square_hull" default="true"/>
+
+	<xacro:if value="$(arg square_hull)">
+		<xacro:property name="chassis_length" value="0.5"/>
+		<xacro:property name="chassis_width" value="0.7"/>
+		<xacro:property name="chassis_height" value="0.305"/>
+	</xacro:if>
+
   <xacro:macro name="craft" params="prefix parent *origin">
     <!-- LINKS -->
     <!-- base link -->
     <link name="${prefix}base_link">
       <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
            to get more realistic behaviour-->
-      <xacro:default_inertial/>
+      <!-- <xacro:default_inertial/>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.3" radius="0.3" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/base_link.dae" /> -->
-        </geometry>
+          <cylinder length="0.3" radius="0.3" /> -->
+<!--           <mesh filename="package://craft_description/meshes/craft/visual/base_link.stl" /> -->
+        <!-- </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.3" radius="0.3" />
+          <cylinder length="0.3" radius="0.3" /> -->
 <!--           <mesh filename="package://craft_description/meshes/craft/collision/base_link.stl" /> -->
-        </geometry>
-      </collision>
+        <!-- </geometry>
+      </collision> -->
     </link>
+
+
     <!-- link 1 -->
-    <link name="${prefix}link1">
-      <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
-           to get more realistic behaviour-->
-      <xacro:default_inertial/>
+    <link name="${prefix}hullassm">
+      </xacro:unless>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.3" radius="0.15" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/link1.dae" /> -->
+          <xacro:if value="$(arg square_hull)">
+					<box size="${chassis_length} ${chassis_width} ${chassis_height}" />
+				</xacro:if>
+				<xacro:unless value="$(arg square_hull)">
+          <mesh filename="package://craft_description/meshes/craft/visual/hullassm.stl" />
+        </xacro:unless>
         </geometry>
+        <material name="hullassm_material">
+				  <color rgba="0.24291 0.244006 0.250091 1.0" />
+			  </material>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.3" radius="0.15" />
-<!--           <mesh filename="package://craft_description/meshes/craft/collision/link1.stl" /> -->
+          <xacro:if value="$(arg square_hull)">
+					  <box size="${chassis_length} ${chassis_width} ${chassis_height}" />
+				  </xacro:if>
+				  <xacro:unless value="$(arg square_hull)">
+            <mesh filename="package://craft_description/meshes/craft/collision/hullassm.stl" />
+          </xacro:unless>
         </geometry>
       </collision>
+      <xacro:if value="$(arg square_hull)">
+        <xacro:box_inertial mass="10" x="${chassis_length}" y="${chassis_width}" z="${chassis_height}">
+          <origin xyz="${chassis_length/2} 0 ${chassis_height/2}" rpy="0 0 0" />
+        </xacro:box_inertial>
+		  </xacro:if>
+      <xacro:unless value="$(arg square_hull)">
+        <inertial>
+          <origin xyz="1.0307e-06 0.188008 0.124094" rpy="0 0 0" />
+          <mass value="6.29782" />
+          <inertia ixx="0.216502" ixy="-1.02604e-06" ixz="1.28468e-06" iyy="0.0821502"
+            iyz="0.0297739" izz="0.237496" />
+        </inertial>
+      </xacro:unless>
     </link>
+    <gazebo reference="hullassm">
+        <material>Gazebo/DarkGrey  </material>
+    </gazebo>
+
+
     <!-- link 2 -->
-    <link name="${prefix}link2">
-      <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
-           to get more realistic behaviour-->
-      <xacro:default_inertial/>
+    <link name="${prefix}propeller">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.8" radius="0.15" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/link2.dae" /> -->
+          <mesh filename="package://craft_description/meshes/craft/visual/propeller.stl" />
         </geometry>
+        <material name="propeller_material">
+				  <color rgba="0.682353 0.333333 0.737255 1.0" />
+			  </material>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.8" radius="0.15" />
-<!--           <mesh filename="package://craft_description/meshes/craft/collision/link2.stl"  /> -->
+          <mesh filename="package://craft_description/meshes/craft/collision/propeller.stl"  />
         </geometry>
       </collision>
+      <inertial>
+        <origin xyz="1.6644e-07 -8.74972e-08 -0.00131544" rpy="0 0 0" />
+        <mass value="0.0252682" />
+        <inertia ixx="1.02998e-05" ixy="4.84789e-11" ixz="7.4214e-11" iyy="1.02998e-05"
+          iyz="5.65357e-11" izz="1.394e-05" />
+		  </inertial>
     </link>
+    <gazebo reference="propeller">
+        <material>Gazebo/Purple  </material>
+    </gazebo>
+
+
     <!-- link 3 -->
-    <link name="${prefix}link3">
-      <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
-           to get more realistic behaviour-->
-      <xacro:default_inertial/>
+    <link name="${prefix}topassm">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.5" radius="0.10" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/link3.dae" /> -->
+          <mesh filename="package://craft_description/meshes/craft/visual/topassm.stl" />
         </geometry>
+        <material name="topassm_material">
+				  <color rgba="0.780424 0.75747 0.695877 1.0" />
+			  </material>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.5" radius="0.10" />
-<!--           <mesh filename="package://craft_description/meshes/craft/collision/link3.stl"  /> -->
+          <mesh filename="package://craft_description/meshes/craft/collision/topassm.stl"  />
         </geometry>
       </collision>
+      <inertial>
+        <origin xyz="0.2286 -0.367849 0.00346183" rpy="0 0 0" />
+        <mass value="0.69925" />
+        <inertia ixx="0.028029" ixy="-2.71051e-19" ixz="-2.03288e-20" iyy="0.0137782"
+          iyz="-7.66504e-05" izz="0.0417123" />
+		  </inertial>
     </link>
+    <gazebo reference="topassm">
+        <material>Gazebo/White </material>
+    </gazebo>
+
+
     <!-- link 4 -->
-    <link name="${prefix}link4">
-      <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
-           to get more realistic behaviour-->
-      <xacro:default_inertial/>
+    <link name="${prefix}servocargoassm">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.1" radius="0.2" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/link4.dae" /> -->
+          <mesh filename="package://craft_description/meshes/craft/visual/servocargoassm.stl" />
         </geometry>
+        <material name="servocargoassm_material">
+				  <color rgba="0.621357 0.806496 0.907144 1.0" />
+			  </material>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.1" radius="0.2" />
-<!--           <mesh filename="package://craft_description/meshes/craft/collision/link4.stl"  /> -->
+          <mesh filename="package://craft_description/meshes/craft/collision/servocargoassm.stl"  />
         </geometry>
       </collision>
+      <inertial>
+        <origin xyz="-2.57314e-10 0.0877782 -0.220495" rpy="0 0 0" />
+        <mass value="8.22292" />
+        <inertia ixx="0.17107" ixy="-2.11808e-10" ixz="6.43831e-10" iyy="0.215272"
+          iyz="0.00150393" izz="0.0855135" />
+		  </inertial>
     </link>
+
+
     <!-- link 5 -->
-    <link name="${prefix}link5">
-      <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
-           to get more realistic behaviour-->
-      <xacro:default_inertial/>
+    <link name="${prefix}rudder">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.2" radius="0.1" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/link5.dae" /> -->
+          <mesh filename="package://craft_description/meshes/craft/visual/rudder.stl" />
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <cylinder length="0.2" radius="0.1" />
-<!--           <mesh filename="package://craft_description/meshes/craft/collision/link5.stl" /> -->
+          <mesh filename="package://craft_description/meshes/craft/collision/rudder.stl" />
         </geometry>
       </collision>
+      <inertial>
+        <origin xyz="1.73472e-17 0.00323547 -0.179304" rpy="0 0 0" />
+        <mass value="0.0651203" />
+        <inertia ixx="0.000500832" ixy="3.75168e-21" ixz="6.55605e-23" iyy="0.00049688"
+          iyz="1.16286e-05" izz="4.87634e-06" />
+		  </inertial>
     </link>
-    <!-- link 6 -->
-    <link name="${prefix}link6">
-      <!-- Default inertial for Gazebo/Ingnition - copy and edit block from 'common.xacro'
-           to get more realistic behaviour-->
-      <xacro:default_inertial/>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <cylinder length="0.05" radius="0.1" />
-<!--           <mesh filename="package://craft_description/meshes/craft/visual/link6.dae" /> -->
-        </geometry>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <cylinder length="0.05" radius="0.1" />
-<!--           <mesh filename="package://craft_description/meshes/craft/collision/link6.stl" /> -->
-        </geometry>
-      </collision>
-    </link>
+    <gazebo reference="rudder">
+        <material>Gazebo/Yellow  </material>
+    </gazebo>
 
     <!-- All-zero tool frame. This frame should correspond to the TOOL frame of the robot's controller.) -->
     <link name="${prefix}tool0" />
     <!-- tool link -->
 
-<!-- START Delete if not needed -->
-    <!-- Standard frames for industrial robots. Also useful for manipulators.
-         (ROS-I specs - https://wiki.ros.org/Industrial/Tutorials/WorkingWithRosIndustrialRobotSupportPackages#Standardised_links_.2F_frames)-->
-    <!-- This frame should correspond to the BASE coordinate system of robot's controller.) -->
-    <link name="${prefix}base" />
-    <!-- Frame for mounting EEF models to a manipulator. x+ axis points forward (REP 103). -->
-    <link name="${prefix}flange" />
-<!-- END Delete if not needed  -->
     <!-- END LINKS -->
+
 
     <!-- JOINTS -->
     <!-- base_joint fixes base_link to the environment -->
@@ -168,53 +206,54 @@
       <child link="${prefix}base_link" />
     </joint>
     <!-- joint 1 -->
-    <joint name="${prefix}joint1" type="revolute">
-      <origin xyz="0 0 0.3" rpy="${pi} 0 0" />
+    <joint name="${prefix}hull_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="${prefix}base_link" />
-      <child link="${prefix}link1" />
-      <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-180)}" upper="${radians(180)}" velocity="${radians(180)}" />
+      <child link="${prefix}hullassm" />
+      
     </joint>
     <!-- joint 2 -->
-    <joint name="${prefix}joint2" type="revolute">
-      <origin xyz="0 0 0.3" rpy="${pi/2} 0 0" />
-      <parent link="${prefix}link1" />
-      <child link="${prefix}link2" />
+    <joint name="${prefix}propeller_joint" type="continuous">
+		  <origin xyz="-2.11292e-18 0.385445 0.0889" rpy="1.5708 -0.187437 -3.49069e-15" />
+      <parent link="${prefix}hullassm" />
+      <child link="${prefix}propeller" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-180)}" upper="${radians(180)}" velocity="${radians(180)}" />
+      <!-- <limit effort="0" lower="${radians(-180)}" upper="${radians(180)}" velocity="${radians(180)}" /> -->
     </joint>
     <!-- joint 3 -->
-    <joint name="${prefix}joint3" type="revolute">
-      <origin xyz="0.8 0 0" rpy="0 0 0" />
-      <parent link="${prefix}link2" />
-      <child link="${prefix}link3" />
+    <joint name="${prefix}hull_cover" type="fixed">
+      <origin xyz="-0.2286 0.360045 0.3048" rpy="0 3.08149e-32 -4.62274e-32" />
+      <parent link="${prefix}hullassm" />
+      <child link="${prefix}topassm" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-90)}" upper="${radians(180)}" velocity="${radians(270)}" />
+      <!-- <limit effort="0" lower="${radians(-90)}" upper="${radians(180)}" velocity="${radians(270)}" /> -->
     </joint>
     <!-- joint 4 -->
-    <joint name="${prefix}joint4" type="revolute">
-      <origin xyz="0 0.1 0" rpy="0 ${-pi/2} 0" />
-      <parent link="${prefix}link3" />
-      <child link="${prefix}link4" />
+    <joint name="${prefix}hull_cargo" type="fixed">
+		  <origin xyz="-2.77556e-17 0.3556 0.3048" rpy="-1.5708 -0 -4.62274e-32" />
+      <parent link="${prefix}hullassm" />
+      <child link="${prefix}servocargoassm" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-360)}" upper="${radians(360)}" velocity="${radians(360)}" />
+      <!-- <limit effort="0" lower="${radians(-360)}" upper="${radians(360)}" velocity="${radians(360)}" /> -->
     </joint>
     <!-- joint 5 -->
-    <joint name="${prefix}joint5" type="revolute">
-      <origin xyz="0 0 -0.1" rpy="0 ${pi/2} 0" />
-      <parent link="${prefix}link4" />
-      <child link="${prefix}link5" />
+    <joint name="${prefix}servo_joint" type="revolute">
+      <!-- NOTE - change r to -1.5708 if breaks -->
+      <origin xyz="3.43338e-16 -0.005715 0.074295" rpy="0 0 -1.03735e-13" />
+      <parent link="${prefix}servocargoassm" />
+      <child link="${prefix}rudder" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-120)}" upper="${radians(120)}" velocity="${radians(540)}" />
+      <!-- NOTE: change  lower="-1.5708" upper="1.5708" if breaks -->
+      <limit effort="0" lower="${radians(-90)}" upper="${radians(90)}" velocity="4.36" />
     </joint>
     <!-- joint 6 -->
-    <joint name="${prefix}joint6" type="revolute">
+    <!-- <joint name="${prefix}joint6" type="revolute">
       <origin xyz="0 0 0.1" rpy="0 ${-pi/2} 0" />
-      <parent link="${prefix}link5" />
+      <parent link="${prefix}rudder" />
       <child link="${prefix}link6" />
       <axis xyz="0 0 1" />
       <limit effort="0" lower="${radians(-360)}" upper="${radians(360)}" velocity="${radians(720)}" />
-    </joint>
+    </joint> -->
 
     <!-- tool frame - fixed frame -->
     <joint name="${prefix}joint6-tool0" type="fixed">
@@ -223,22 +262,6 @@
       <origin xyz="0 0 -0.115" rpy="0 ${-pi} ${-pi/2}" />
     </joint>
     <!-- END JOINTS -->
-
-<!-- START Delete if not needed -->
-    <!-- Standard frames for industrial robots. Also useful for manipulators.
-         (ROS-I specs - https://wiki.ros.org/Industrial/Tutorials/WorkingWithRosIndustrialRobotSupportPackages#Standardised_links_.2F_frames)-->
-    <joint name="${prefix}base_link-base_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="${prefix}base_link" />
-      <child link="${prefix}base" />
-    </joint>
-
-    <joint name="${prefix}tool0-flange_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="${prefix}tool0" />
-      <child link="${prefix}flange" />
-    </joint>
-<!-- END Delete if not needed  -->
 
 
   </xacro:macro>
