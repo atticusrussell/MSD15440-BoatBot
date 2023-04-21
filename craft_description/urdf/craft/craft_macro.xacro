@@ -219,7 +219,7 @@
       <parent link="${prefix}servocargoassm" />
       <child link="${prefix}rudder" />
       <axis xyz="0 0 1" />
-      <!-- NOTE: future try lower="${radians(-90)}" upper="${radians(90)}" -->
+      <!-- NOTE future try lower="${radians(-90)}" upper="${radians(90)}" -->
       <limit effort="0" lower="-1.5708" upper="1.5708" velocity="4.36" />
     </joint>
     <!-- END JOINTS -->
