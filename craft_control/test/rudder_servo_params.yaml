@@ -1,7 +1,0 @@
-test_rudder_servo:
-  ros__parameters:
-
-    joints:
-      - joint1
-
-    interface_name: acceleration
