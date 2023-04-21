@@ -167,6 +167,5 @@ Here are some useful references for developing with ROS2:
 
 ### Packages in `msd15440_craft` metapackage
 * **craft_hardware** - hardware for CRAFT autonomous boat
-* **craft_control** - control for CRAFT autonomous boat
 * **craft_bringup** - bringup for CRAFT autonomous boat
 * **craft_description** - description of the CRAFT autonomous boat

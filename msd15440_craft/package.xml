@@ -11,8 +11,6 @@
 
   <exec_depend>craft_hardware</exec_depend>
 
-  <exec_depend>craft_control</exec_depend>
-
   <exec_depend>craft_bringup</exec_depend>
 
   <exec_depend>craft_description</exec_depend>
