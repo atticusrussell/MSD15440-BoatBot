@@ -28,15 +28,15 @@
         </xacro:unless>
       </hardware>
       <joint name="${prefix}servo_joint">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
+        <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
           <!-- TODO try re-enabling -->
           <!-- <param name="min">-1</param>
           <param name="max">1</param> -->
-        </command_interface>
-        <state_interface name="position">
+        <!-- </command_interface> -->
+        <state_interface name="position"/>
           <!-- TODO try re-enabling -->
           <!-- <param name="initial_value">0.0</param> -->
-        </state_interface>
+        <!-- </state_interface> -->
       </joint>
       <!-- TODO implement, replace unrealistic position -->
 			<!-- TODO swap to actuator maybe?  -->
