@@ -72,44 +72,31 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        flange:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        link_1:
+        hullassm:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_2:
+        propeller:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_3:
+        rudder:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_4:
+        servocargoassm:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_5:
+        topassm:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_6:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        tool0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         world:
           Alpha: 1
           Show Axes: false
@@ -128,21 +115,15 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
-        flange:
+        hullassm:
           Value: true
-        link_1:
+        propeller:
           Value: true
-        link_2:
+        rudder:
           Value: true
-        link_3:
+        servocargoassm:
           Value: true
-        link_4:
-          Value: true
-        link_5:
-          Value: true
-        link_6:
-          Value: true
-        tool0:
+        topassm:
           Value: true
         world:
           Value: true
@@ -156,15 +137,8 @@ Visualization Manager:
           base_link:
             base:
               {}
-            link_1:
-              link_2:
-                link_3:
-                  link_4:
-                    link_5:
-                      link_6:
-                        tool0:
-                          flange:
-                            {}
+            hullassm:
+              
       Update Interval: 0
       Value: true
   Enabled: true
