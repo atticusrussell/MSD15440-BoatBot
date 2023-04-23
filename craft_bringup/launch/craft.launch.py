@@ -94,6 +94,14 @@ def generate_launch_description():
         )
     )
 
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "prop_controller",
+            default_value="forward_velocity_controller",
+            description="Propeller controller to start.",
+        )
+    )
+
     # Initialize Arguments
     runtime_config_package = LaunchConfiguration("runtime_config_package")
     controllers_file = LaunchConfiguration("controllers_file")
@@ -103,6 +111,7 @@ def generate_launch_description():
     use_mock_hardware = LaunchConfiguration("use_mock_hardware")
     mock_sensor_commands = LaunchConfiguration("mock_sensor_commands")
     robot_controller = LaunchConfiguration("robot_controller")
+    prop_controller = LaunchConfiguration("prop_controller")
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -160,7 +169,7 @@ def generate_launch_description():
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
-    robot_controller_names = [robot_controller]
+    robot_controller_names = [robot_controller, prop_controller]
     robot_controller_spawners = []
     for controller in robot_controller_names:
         robot_controller_spawners += [
