@@ -11,6 +11,19 @@ publisher_forward_position_controller:
     pos4: [0.0]
 
 
+publisher_forward_velocity_controller:
+  ros__parameters:
+
+    controller_name: "forward_velocity_controller"
+    wait_sec_between_publish: 5
+
+    goal_names: ["vel1", "vel2", "vel3", "vel4"]
+    vel1: [0.785]
+    vel2: [0.0]
+    vel3: [-0.785]
+    vel4: [5.0]
+
+
 publisher_joint_trajectory_controller:
   ros__parameters:
 
