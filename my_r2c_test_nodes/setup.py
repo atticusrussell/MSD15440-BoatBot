@@ -16,7 +16,7 @@ from glob import glob
 
 from setuptools import setup
 
-package_name = "ros2_controllers_test_nodes"
+package_name = "my_r2c_test_nodes"
 
 setup(
     name=package_name,
@@ -49,11 +49,11 @@ Demo nodes for showing and testing functionalities of the ros2_control framework
     entry_points={
         "console_scripts": [
             "publisher_forward_position_controller = \
-                ros2_controllers_test_nodes.publisher_forward_position_controller:main",
+                my_r2c_test_nodes.publisher_forward_position_controller:main",
             "publisher_forward_velocity_controller = \
-                ros2_controllers_test_nodes.publisher_forward_velocity_controller:main",
+                my_r2c_test_nodes.publisher_forward_velocity_controller:main",
             "publisher_joint_trajectory_controller = \
-                ros2_controllers_test_nodes.publisher_joint_trajectory_controller:main",
+                my_r2c_test_nodes.publisher_joint_trajectory_controller:main",
         ],
     },
 )
