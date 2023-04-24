@@ -180,7 +180,7 @@ def generate_launch_description():
             )
         ]
 
-    inactive_robot_controller_names = ["add_some_controller_name"]
+    inactive_robot_controller_names = ["joint_trajectory_controller"]
     inactive_robot_controller_spawners = []
     for controller in inactive_robot_controller_names:
         inactive_robot_controller_spawners += [
@@ -219,9 +219,9 @@ def generate_launch_description():
         ]
 
     # Delay start of inactive_robot_controller_names after other controllers
-    delay_inactive_robot_controller_spawners_after_joint_state_broadcaster_spawner = []
+    delay_inactive_robot_controller_spawners_after_active_controllers_spawner = []
     for i, controller in enumerate(inactive_robot_controller_spawners):
-        delay_inactive_robot_controller_spawners_after_joint_state_broadcaster_spawner += [
+        delay_inactive_robot_controller_spawners_after_active_controllers_spawner += [
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=inactive_robot_controller_spawners[i - 1]
@@ -232,14 +232,23 @@ def generate_launch_description():
             )
         ]
 
+    # Delay start of rviz node until after robot_controller_spawners to prevent 
+    # rviz from complaining about invalid frame ID
+    delay_rviz_after_inactive_controllers_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=inactive_robot_controller_spawners[-1],
+            on_exit=[rviz_node],
+        )
+    )
+
     return LaunchDescription(
         declared_arguments
         + [
             control_node,
             robot_state_pub_node,
-            rviz_node,
+            delay_rviz_after_inactive_controllers_spawner,
             delay_joint_state_broadcaster_spawner_after_ros2_control_node,
         ]
         + delay_robot_controller_spawners_after_joint_state_broadcaster_spawner
-        + delay_inactive_robot_controller_spawners_after_joint_state_broadcaster_spawner
+        + delay_inactive_robot_controller_spawners_after_active_controllers_spawner
     )
