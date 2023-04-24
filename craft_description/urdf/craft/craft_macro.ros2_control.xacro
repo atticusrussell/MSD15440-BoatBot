@@ -33,10 +33,10 @@
           <state_interface name="velocity"/>
         </joint>
       </ros2_control>
-    <xacro:unless>
+    </xacro:unless>
 
     <!-- gazebo hardware plugin -->
-    <xacro:if value="${sim_gazebo_classic}">
+    <xacro:if value="$(arg sim_gazebo_classic)">
       <ros2_control name="Gazebo${name}" type="system">
         <hardware>
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -67,7 +67,7 @@
           <parameters>$(find craft_bringup)/config/gz_ros2_ctl_use_sim.yaml</parameters>
         </plugin>
       </gazebo>
-    <xacro:if>
+    </xacro:if>
 
   </xacro:macro>
 </robot>
