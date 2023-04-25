@@ -29,11 +29,11 @@ hardware_interface::CallbackReturn CraftHardware::on_init(
     return CallbackReturn::ERROR;
   }
 
-  // TODO(anyone): read parameters and initialize the hardware
+  // TEST(anyone): read parameters and initialize the hardware
   hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
   hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
 
-  srv_cfg_.servo_name = info_.hardware_parameters["srv_name"];
+  rudder_joint_.name = info_.hardware_parameters["srv_name"];
   srv_cfg_.pin = std::stoi(info_.hardware_parameters["srv_pin"]);
   srv_cfg_.min_angle = std::stof(info_.hardware_parameters["srv_min_angle"]);
   srv_cfg_.max_angle = std::stof(info_.hardware_parameters["srv_max_angle"]);
@@ -54,11 +54,9 @@ hardware_interface::CallbackReturn CraftHardware::on_configure(
 std::vector<hardware_interface::StateInterface> CraftHardware::export_state_interfaces()
 {
   std::vector<hardware_interface::StateInterface> state_interfaces;
-  for (size_t i = 0; i < info_.joints.size(); ++i) {
     state_interfaces.emplace_back(hardware_interface::StateInterface(
-      // TODO(anyone): insert correct interfaces
-      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
-  }
+    // TEST(anyone): insert correct interfaces
+    rudder_joint_.name, hardware_interface::HW_IF_POSITION, &rudder_joint_.pos));
 
   return state_interfaces;
 }
@@ -66,11 +64,9 @@ std::vector<hardware_interface::StateInterface> CraftHardware::export_state_inte
 std::vector<hardware_interface::CommandInterface> CraftHardware::export_command_interfaces()
 {
   std::vector<hardware_interface::CommandInterface> command_interfaces;
-  for (size_t i = 0; i < info_.joints.size(); ++i) {
     command_interfaces.emplace_back(hardware_interface::CommandInterface(
-      // TODO(anyone): insert correct interfaces
-      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
-  }
+      // TEST(anyone): insert correct interfaces
+      rudder_joint_.name, hardware_interface::HW_IF_POSITION, &rudder_joint_.cmd));
 
   return command_interfaces;
 }
@@ -78,15 +74,19 @@ std::vector<hardware_interface::CommandInterface> CraftHardware::export_command_
 hardware_interface::CallbackReturn CraftHardware::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
-  // TODO(anyone): prepare the robot to receive commands
-  ang_srv_(srv_cfg_.pin, srv_cfg_.min_angle, srv_cfg_.max_angle, srv_cfg_.min_pulse_width_us, srv_cfg_.max_pulse_width_us);
+  // TEST(anyone): prepare the robot to receive commands
+  rudder_joint_.name = srv_cfg_.name;
+  rudder_joint_.servo = AngularServo(srv_cfg_.pin, srv_cfg_.min_angle, srv_cfg_.max_angle, srv_cfg_.min_pulse_width_us, srv_cfg_.max_pulse_width_us);
+  // srv_joint.servo = ang_srv_;
   return CallbackReturn::SUCCESS;
 }
 
 hardware_interface::CallbackReturn CraftHardware::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
-  // TODO(anyone): prepare the robot to stop receiving commands
+  // TEST(anyone): prepare the robot to stop receiving commands
+  // FUTURE maybe make a destructor for AngularServo?
+  rudder_joint_.servo.setPulseWidth(0);
 
   return CallbackReturn::SUCCESS;
 }
@@ -94,7 +94,10 @@ hardware_interface::CallbackReturn CraftHardware::on_deactivate(
 hardware_interface::return_type CraftHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
-  // TODO(anyone): read robot states
+  // TEST(anyone): read robot states
+  float currentAngleDegrees = rudder_joint_.servo.getAngle();
+  // convert from degrees to radians
+  rudder_joint_.pos = currentAngleDegrees * M_PI / 180;
 
   return hardware_interface::return_type::OK;
 }
@@ -102,7 +105,11 @@ hardware_interface::return_type CraftHardware::read(
 hardware_interface::return_type CraftHardware::write(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
-  // TODO(anyone): write robot's commands'
+  // TEST(anyone): write robot's commands'
+  // FUTURE change function names to setAngleDeg and getAngleDeg
+  // convert from radians to degrees
+  float desiredAngleDegrees = rudder_joint_.cmd * 180 / M_PI;
+  rudder_joint_.servo.setAngle(desiredAngleDegrees);
 
   return hardware_interface::return_type::OK;
 }

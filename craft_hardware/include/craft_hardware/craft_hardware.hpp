@@ -36,12 +36,20 @@ class CraftHardware : public hardware_interface::SystemInterface
 
 struct ServoConfig
 {
-  std::string servo_name = "";
+  std::string name = "";
   int pin = 0;
   float min_angle = 0.0;
   float max_angle = 0.0;
   int min_pulse_width_us = 0;
   int max_pulse_width_us = 0;
+};
+
+struct ServoJoint
+{
+  std::string name = "";
+  AngularServo servo;
+  double pos = 0;
+  double cmd = 0;
 };
 
 public:
@@ -80,8 +88,8 @@ private:
   std::vector<double> hw_commands_;
   std::vector<double> hw_states_;
 
-  AngularServo ang_srv_;
   ServoConfig srv_cfg_;
+  ServoJoint rudder_joint_;
 };
 
 }  // namespace craft_hardware
