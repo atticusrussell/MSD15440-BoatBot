@@ -32,6 +32,7 @@ from launch.substitutions import Command, FindExecutable, LaunchConfiguration, P
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+# FIXME this does not work. gazebo doesn't launch correctly
 
 def generate_launch_description():
     # Declare arguments
