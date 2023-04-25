@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'twist_to_boat = twist_to_boat.twist_to_boat:main'
         ],
     },
 )

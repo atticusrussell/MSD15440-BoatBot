@@ -7,6 +7,12 @@
   <maintainer email="atticusrussell@gmail.com">Atticus Russell</maintainer>
   <license>MIT</license>
 
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
+
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
