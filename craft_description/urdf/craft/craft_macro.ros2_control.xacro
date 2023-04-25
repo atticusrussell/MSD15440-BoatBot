@@ -11,60 +11,88 @@
                simulation_controllers"
                >
 
-  <!-- real hardware plugin -->
-    <xacro:unless value="$(arg sim_gazebo_classic)">
-      <ros2_control name="${name}" type="system">
-        <hardware>
-          <!-- TODO implement real hardware interface here -->
+    <ros2_control name="${name}" type="system">
+      <hardware>
+        <xacro:if value="${use_mock_hardware}">
+          <plugin>mock_components/GenericSystem</plugin>
+          <param name="mock_sensor_commands">${mock_sensor_commands}</param>
+        </xacro:if>
+        <xacro:if value="${sim_gazebo_classic}">
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-        </hardware>
+        </xacro:if>
+        <xacro:if value="${sim_gazebo}">
+          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="${use_mock_hardware or sim_gazebo_classic or sim_gazebo}">
+          <plugin>robot_hardware_inteface/RobotHardwareInteface</plugin>
+        </xacro:unless>
+      </hardware>
+      <joint name="${prefix}servo_joint">
+        <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
+          <!-- TODO try re-enabling -->
+          <!-- <param name="min">-1</param>
+          <param name="max">1</param> -->
+        <!-- </command_interface> -->
+        <state_interface name="position"/>
+          <!-- TODO try re-enabling -->
+          <!-- <param name="initial_value">0.0</param> -->
+        <!-- </state_interface> -->
+      </joint>
+      <!-- TODO implement, replace unrealistic position -->
+			<!-- TODO swap to actuator maybe?  -->
+      <joint name="${prefix}propeller_joint">
+        <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
+          <param name="min">-10</param>
+          <param name="max">10</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <!-- Remove/change sensors as needed -->
+      <!-- <sensor name="tcp_fts_sensor">            
+        <state_interface name="fx"/>
+        <state_interface name="fy"/>
+        <state_interface name="fz"/>
+        <state_interface name="tx"/>
+        <state_interface name="ty"/>
+        <state_interface name="tz"/> -->
+        <!-- Change sensors as needed -->
+        <!-- <param name="frame_id">tool0</param>    
+        <param name="min_fx">-100</param>
+        <param name="max_fx">100</param>
+        <param name="min_fy">-100</param>
+        <param name="max_fy">100</param>
+        <param name="min_fz">-200</param>
+        <param name="max_fz">200</param>
+        <param name="min_tx">-10</param>
+        <param name="max_tx">10</param>
+        <param name="min_ty">-10</param>
+        <param name="max_ty">10</param>
+        <param name="min_tz">-15</param>
+        <param name="max_tz">15</param>
+      </sensor> -->
+    </ros2_control>
 
-        <joint name="${prefix}servo_joint">
-          <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
-          <state_interface name="position"/>
-        </joint>
-        <!-- TODO replace unrealistic position, swap to actuator maybe?  -->
-        <joint name="${prefix}propeller_joint">
-          <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
-            <param name="min">-10</param>
-            <param name="max">10</param>
-          </command_interface>
-          <state_interface name="position"/>
-          <state_interface name="velocity"/>
-        </joint>
-      </ros2_control>
-    </xacro:unless>
-
-    <!-- gazebo hardware plugin -->
     <xacro:if value="$(arg sim_gazebo_classic)">
-      <ros2_control name="Gazebo${name}" type="system">
-        <hardware>
-          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-        </hardware>
-
-        <joint name="${prefix}servo_joint">
-          <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
-          <state_interface name="position"/>
-        </joint>
-        <!-- TODO replace unrealistic position, swap to actuator maybe?  -->
-        <joint name="${prefix}propeller_joint">
-          <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
-            <param name="min">-10</param>
-            <param name="max">10</param>
-          </command_interface>
-          <state_interface name="position"/>
-          <state_interface name="velocity"/>
-        </joint>
-      </ros2_control>
-
       <!-- Gazebo plugins -->
       <gazebo reference="world">
       </gazebo>
       <gazebo>
         <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-          <!-- TODO chance back to passed in param to eliminate package name -->
-          <parameters>$(find craft_bringup)/config/craft_controllers.yaml</parameters>
-          <parameters>$(find craft_bringup)/config/gz_ros2_ctl_use_sim.yaml</parameters>
+          <parameters>${simulation_controllers}</parameters>
+        </plugin>
+      </gazebo>
+    </xacro:if>
+
+    <xacro:if value="$(arg sim_gazebo)">
+      <!-- Gazebo plugins -->
+      <gazebo reference="world">
+      </gazebo>
+      <gazebo>
+        <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <parameters>${simulation_controllers}</parameters>
+          <controller_manager_node_name>${prefix}controller_manager</controller_manager_node_name>
         </plugin>
       </gazebo>
     </xacro:if>

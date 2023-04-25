@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="craft_ros2_control" params="
+               name
+               prefix
+               use_mock_hardware:=^|false
+               mock_sensor_commands:=^|false
+               sim_gazebo_classic:=^|false
+               sim_gazebo:=^|false
+               simulation_controllers"
+               >
+
+  <!-- real hardware plugin -->
+    <xacro:unless value="$(arg sim_gazebo_classic)">
+      <ros2_control name="${name}" type="system">
+        <hardware>
+          <!-- TODO implement real hardware interface here -->
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <joint name="${prefix}servo_joint">
+          <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
+          <state_interface name="position"/>
+        </joint>
+        <!-- TODO replace unrealistic position, swap to actuator maybe?  -->
+        <joint name="${prefix}propeller_joint">
+          <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
+            <param name="min">-10</param>
+            <param name="max">10</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </ros2_control>
+    </xacro:unless>
+
+    <!-- gazebo hardware plugin -->
+    <xacro:if value="$(arg sim_gazebo_classic)">
+      <ros2_control name="Gazebo${name}" type="system">
+        <hardware>
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <joint name="${prefix}servo_joint">
+          <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
+          <state_interface name="position"/>
+        </joint>
+        <!-- TODO replace unrealistic position, swap to actuator maybe?  -->
+        <joint name="${prefix}propeller_joint">
+          <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
+            <param name="min">-10</param>
+            <param name="max">10</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </ros2_control>
+
+      <!-- Gazebo plugins -->
+      <gazebo reference="world">
+      </gazebo>
+      <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+          <!-- TODO chance back to passed in param to eliminate package name -->
+          <parameters>$(find craft_bringup)/config/craft_controllers.yaml</parameters>
+          <parameters>$(find craft_bringup)/config/gz_ros2_ctl_use_sim.yaml</parameters>
+        </plugin>
+      </gazebo>
+    </xacro:if>
+
+  </xacro:macro>
+</robot>
