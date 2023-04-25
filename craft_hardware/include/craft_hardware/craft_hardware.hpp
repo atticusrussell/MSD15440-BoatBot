@@ -27,10 +27,23 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 
+#include "craft_hardware/angular_servo.hpp"
+
 namespace craft_hardware
 {
 class CraftHardware : public hardware_interface::SystemInterface
 {
+
+struct ServoConfig
+{
+  std::string servo_name = "";
+  int pin = 0;
+  float min_angle = 0.0;
+  float max_angle = 0.0;
+  int min_pulse_width_us = 0;
+  int max_pulse_width_us = 0;
+};
+
 public:
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
   hardware_interface::CallbackReturn on_init(
@@ -63,8 +76,12 @@ public:
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
+  // TODO delete the following two lines and replace them with a proper class
   std::vector<double> hw_commands_;
   std::vector<double> hw_states_;
+
+  AngularServo servo_;
+  ServoConfig servo_config_;
 };
 
 }  // namespace craft_hardware

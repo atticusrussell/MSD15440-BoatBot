@@ -33,6 +33,13 @@ hardware_interface::CallbackReturn CraftHardware::on_init(
   hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
   hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
 
+  servo_config_.servo_name = info_.hardware_parameters["srv_name"];
+  servo_config_.pin = std::stoi(info_.hardware_parameters["srv_pin"]);
+  servo_config_.min_angle = std::stof(info_.hardware_parameters["srv_min_angle"]);
+  servo_config_.max_angle = std::stof(info_.hardware_parameters["srv_max_angle"]);
+  servo_config_.min_pulse_width_us = std::stoi(info_.hardware_parameters["srv_min_pulse_width_us"]);
+  servo_config_.max_pulse_width_us = std::stoi(info_.hardware_parameters["srv_max_pulse_width_us"]);
+
   return CallbackReturn::SUCCESS;
 }
 
