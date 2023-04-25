@@ -84,10 +84,6 @@ public:
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
-  // TODO delete the following two lines and replace them with a proper class
-  std::vector<double> hw_commands_;
-  std::vector<double> hw_states_;
-
   ServoConfig srv_cfg_;
   ServoJoint rudder_joint_;
 };

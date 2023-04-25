@@ -30,9 +30,6 @@ hardware_interface::CallbackReturn CraftHardware::on_init(
   }
 
   // TEST(anyone): read parameters and initialize the hardware
-  hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-
   rudder_joint_.name = info_.hardware_parameters["srv_name"];
   srv_cfg_.pin = std::stoi(info_.hardware_parameters["srv_pin"]);
   srv_cfg_.min_angle = std::stof(info_.hardware_parameters["srv_min_angle"]);
