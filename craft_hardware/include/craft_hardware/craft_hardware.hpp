@@ -80,8 +80,8 @@ private:
   std::vector<double> hw_commands_;
   std::vector<double> hw_states_;
 
-  AngularServo servo_;
-  ServoConfig servo_config_;
+  AngularServo ang_srv_;
+  ServoConfig srv_cfg_;
 };
 
 }  // namespace craft_hardware
