@@ -47,6 +47,41 @@ install(
   DESTINATION include
 )
 
+add_library(
+  craft_hardware
+  SHARED
+  src/craft_hardware.cpp
+)
+target_include_directories(
+  craft_hardware
+  PUBLIC
+  include
+)
+ament_target_dependencies(
+  craft_hardware
+  hardware_interface
+  rclcpp
+  rclcpp_lifecycle
+)
+# prevent pluginlib from using boost
+target_compile_definitions(craft_hardware PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
+
+pluginlib_export_plugin_description_file(
+  hardware_interface craft_hardware.xml)
+
+install(
+  TARGETS
+  craft_hardware
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -68,7 +103,29 @@ if(BUILD_TESTING)
     pluginlib
     ros2_control_test_assets
   )
+
+  ament_add_gmock(test_craft_hardware test/test_craft_hardware.cpp)
+  target_include_directories(test_craft_hardware PRIVATE include)
+  ament_target_dependencies(
+    test_craft_hardware
+    hardware_interface
+    pluginlib
+    ros2_control_test_assets
+  )
 endif()
+
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  craft_hardware
+)
+ament_export_dependencies(
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+)
 
 ament_export_include_directories(
   include

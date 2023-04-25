@@ -1,4 +1,5 @@
-// Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
+// Copyright (c) 2023, Atticus Russell
+// Copyright (c) 2023, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,16 +16,16 @@
 #include <limits>
 #include <vector>
 
-#include "craft_hardware/rudderServo.hpp"
+#include "craft_hardware/craft_hardware.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 namespace craft_hardware
 {
-hardware_interface::CallbackReturn RudderServo::on_init(
+hardware_interface::CallbackReturn CraftHardware::on_init(
   const hardware_interface::HardwareInfo & info)
 {
-  if (hardware_interface::ActuatorInterface::on_init(info) != CallbackReturn::SUCCESS) {
+  if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS) {
     return CallbackReturn::ERROR;
   }
 
@@ -35,7 +36,7 @@ hardware_interface::CallbackReturn RudderServo::on_init(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn RudderServo::on_configure(
+hardware_interface::CallbackReturn CraftHardware::on_configure(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to be ready for read calls and write calls of some interfaces
@@ -43,33 +44,31 @@ hardware_interface::CallbackReturn RudderServo::on_configure(
   return CallbackReturn::SUCCESS;
 }
 
-std::vector<hardware_interface::StateInterface> RudderServo::export_state_interfaces()
+std::vector<hardware_interface::StateInterface> CraftHardware::export_state_interfaces()
 {
   std::vector<hardware_interface::StateInterface> state_interfaces;
   for (size_t i = 0; i < info_.joints.size(); ++i) {
-    state_interfaces.emplace_back(
-      hardware_interface::StateInterface(
-        // TODO(anyone): insert correct interfaces
-        info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+      // TODO(anyone): insert correct interfaces
+      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
   }
 
   return state_interfaces;
 }
 
-std::vector<hardware_interface::CommandInterface> RudderServo::export_command_interfaces()
+std::vector<hardware_interface::CommandInterface> CraftHardware::export_command_interfaces()
 {
   std::vector<hardware_interface::CommandInterface> command_interfaces;
   for (size_t i = 0; i < info_.joints.size(); ++i) {
-    command_interfaces.emplace_back(
-      hardware_interface::CommandInterface(
-        // TODO(anyone): insert correct interfaces
-        info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
+    command_interfaces.emplace_back(hardware_interface::CommandInterface(
+      // TODO(anyone): insert correct interfaces
+      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
   }
 
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn RudderServo::on_activate(
+hardware_interface::CallbackReturn CraftHardware::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to receive commands
@@ -77,7 +76,7 @@ hardware_interface::CallbackReturn RudderServo::on_activate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn RudderServo::on_deactivate(
+hardware_interface::CallbackReturn CraftHardware::on_deactivate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to stop receiving commands
@@ -85,7 +84,7 @@ hardware_interface::CallbackReturn RudderServo::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type RudderServo::read(
+hardware_interface::return_type CraftHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   // TODO(anyone): read robot states
@@ -93,7 +92,7 @@ hardware_interface::return_type RudderServo::read(
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type RudderServo::write(
+hardware_interface::return_type CraftHardware::write(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   // TODO(anyone): write robot's commands'
@@ -106,4 +105,4 @@ hardware_interface::return_type RudderServo::write(
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-  craft_hardware::RudderServo, hardware_interface::ActuatorInterface)
+  craft_hardware::CraftHardware, hardware_interface::SystemInterface)

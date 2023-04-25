@@ -1,4 +1,5 @@
-// Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
+// Copyright (c) 2023, Atticus Russell
+// Copyright (c) 2023, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CRAFT_HARDWARE__RUDDERSERVO_HPP_
-#define CRAFT_HARDWARE__RUDDERSERVO_HPP_
+#ifndef CRAFT_HARDWARE__CRAFT_HARDWARE_HPP_
+#define CRAFT_HARDWARE__CRAFT_HARDWARE_HPP_
 
 #include <string>
 #include <vector>
 
 #include "craft_hardware/visibility_control.h"
-#include "hardware_interface/actuator_interface.hpp"
+#include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
@@ -28,7 +29,7 @@
 
 namespace craft_hardware
 {
-class RudderServo : public hardware_interface::ActuatorInterface
+class CraftHardware : public hardware_interface::SystemInterface
 {
 public:
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
@@ -68,4 +69,4 @@ private:
 
 }  // namespace craft_hardware
 
-#endif  // CRAFT_HARDWARE__RUDDERSERVO_HPP_
+#endif  // CRAFT_HARDWARE__CRAFT_HARDWARE_HPP_

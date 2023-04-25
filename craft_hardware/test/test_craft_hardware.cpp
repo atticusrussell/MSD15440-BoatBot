@@ -1,4 +1,5 @@
-// Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
+// Copyright (c) 2023, Atticus Russell
+// Copyright (c) 2023, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,17 +21,17 @@
 #include "ros2_control_test_assets/components_urdfs.hpp"
 #include "ros2_control_test_assets/descriptions.hpp"
 
-class TestRudderServo : public ::testing::Test
+class TestCraftHardware : public ::testing::Test
 {
 protected:
   void SetUp() override
   {
     // TODO(anyone): Extend this description to your robot
-    rudderServo_2dof_ =
+    craft_hardware_2dof_ =
       R"(
-        <ros2_control name="RudderServo2dof" type="actuator">
+        <ros2_control name="CraftHardware2dof" type="system">
           <hardware>
-            <plugin>craft_hardware/RudderServo</plugin>
+            <plugin>craft_hardware/CraftHardware</plugin>
           </hardware>
           <joint name="joint1">
             <command_interface name="position"/>
@@ -46,12 +47,12 @@ protected:
     )";
   }
 
-  std::string rudderServo_2dof_;
+  std::string craft_hardware_2dof_;
 };
 
-TEST_F(TestRudderServo, load_rudderServo_2dof)
+TEST_F(TestCraftHardware, load_craft_hardware_2dof)
 {
-  auto urdf = ros2_control_test_assets::urdf_head + rudderServo_2dof_ +
-    ros2_control_test_assets::urdf_tail;
+  auto urdf = ros2_control_test_assets::urdf_head + craft_hardware_2dof_ +
+              ros2_control_test_assets::urdf_tail;
   ASSERT_NO_THROW(hardware_interface::ResourceManager rm(urdf));
 }
