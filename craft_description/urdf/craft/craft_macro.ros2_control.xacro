@@ -25,12 +25,12 @@
         </xacro:if>
         <xacro:unless value="${use_mock_hardware or sim_gazebo_classic or sim_gazebo}">
           <plugin>craft_hardware/CraftHardware</plugin>
-          <param srv_name="servo_joint">
-          <param srv_pin="18">
-          <param srv_min_angle="0.0">
-          <param srv_max_angle="180.0">
-          <param srv_min_pulse_width_us="650">
-          <param srv_max_pulse_width_us="2500">
+          <param name="srv_name">servo_joint</param>
+          <param name="srv_pin">"18"</param>
+          <param name="srv_min_angle">0.0</param>
+          <param name="srv_max_angle">180.0</param>
+          <param name="srv_min_pulse_width_us">650</param>
+          <param name="srv_max_pulse_width_us">2500</param>
         </xacro:unless>
       </hardware>
       <joint name="${prefix}servo_joint">
