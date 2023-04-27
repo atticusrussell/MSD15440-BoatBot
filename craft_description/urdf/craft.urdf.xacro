@@ -22,13 +22,5 @@
     <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the world -->
   </xacro:craft>
 
-  <xacro:craft_ros2_control
-    name="craft"
-    prefix="$(arg prefix)"
-    use_mock_hardware="$(arg use_mock_hardware)"
-    mock_sensor_commands="$(arg mock_sensor_commands)"
-    sim_gazebo_classic="$(arg sim_gazebo_classic)"
-    sim_gazebo="$(arg sim_gazebo)"
-    simulation_controllers="$(arg simulation_controllers)" />
 
 </robot>

@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
+  
+  <xacro:arg name="name" default="craft"/>
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="use_mock_hardware" default="false"/>
+  <xacro:arg name="mock_sensor_commands" default="false"/>
+  <xacro:arg name="sim_gazebo_classic" default="false"/>
+  <xacro:arg name="sim_gazebo" default="false"/>
+  <xacro:arg name="real_hardware" default="false"/>
 
-  <xacro:macro name="craft_ros2_control" params="
-               name
-               prefix
-               use_mock_hardware:=^|false
-               mock_sensor_commands:=^|false
-               sim_gazebo_classic:=^|false
-               sim_gazebo:=^|false
-               simulation_controllers"
-               >
-
-    <ros2_control name="${name}" type="system">
+    <ros2_control name="$(arg name)" type="system">
       <hardware>
-        <xacro:if value="${use_mock_hardware}">
+        <xacro:if value="$(arg use_mock_hardware)">
           <plugin>mock_components/GenericSystem</plugin>
-          <param name="mock_sensor_commands">${mock_sensor_commands}</param>
+          <param name="mock_sensor_commands">$(arg mock_sensor_commands)</param>
         </xacro:if>
-        <xacro:if value="${sim_gazebo_classic}">
+        <xacro:if value="$(arg sim_gazebo_classic)">
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </xacro:if>
-        <xacro:if value="${sim_gazebo}">
+        <xacro:if value="$(arg sim_gazebo)">
           <plugin>ign_ros2_control/IgnitionSystem</plugin>
         </xacro:if>
-        <xacro:unless value="${use_mock_hardware or sim_gazebo_classic or sim_gazebo}">
+        <xacro:if value="$(arg real_hardware)">
           <plugin>craft_hardware/CraftHardware</plugin>
           <param name="srv_name">servo_joint</param>
           <param name="srv_pin">"18"</param>
@@ -31,28 +29,32 @@
           <param name="srv_max_angle">180.0</param>
           <param name="srv_min_pulse_width_us">650</param>
           <param name="srv_max_pulse_width_us">2500</param>
-        </xacro:unless>
+        </xacro:if>
       </hardware>
-      <joint name="${prefix}servo_joint">
+      <joint name="$(arg prefix)servo_joint">
         <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
           <!-- TODO try re-enabling -->
           <!-- <param name="min">-1</param>
           <param name="max">1</param> -->
         <!-- </command_interface> -->
-        <state_interface name="position"/>
+        <state_interface name="position">
           <!-- TODO try re-enabling -->
-          <!-- <param name="initial_value">0.0</param> -->
-        <!-- </state_interface> -->
+          <param name="initial_value">0.0</param>
+        </state_interface>
       </joint>
       <!-- TODO implement, replace unrealistic position -->
 			<!-- TODO swap to actuator maybe?  -->
-      <joint name="${prefix}propeller_joint">
+      <joint name="$(arg prefix)propeller_joint">
         <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
           <param name="min">-10</param>
           <param name="max">10</param>
         </command_interface>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">0.0</param>
+        </state_interface>
       </joint>
       
       <!-- Remove/change sensors as needed -->
@@ -86,7 +88,7 @@
       </gazebo>
       <gazebo>
         <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-          <parameters>${simulation_controllers}</parameters>
+          <parameters>$(find craft_bringup)/config/craft_controllers.yaml</parameters>
         </plugin>
       </gazebo>
     </xacro:if>
@@ -97,11 +99,10 @@
       </gazebo>
       <gazebo>
         <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-          <parameters>${simulation_controllers}</parameters>
-          <controller_manager_node_name>${prefix}controller_manager</controller_manager_node_name>
+          <parameters>$(find craft_bringup)/config/craft_controllers.yaml</parameters>
+          <controller_manager_node_name>$(arg prefix)controller_manager</controller_manager_node_name>
         </plugin>
       </gazebo>
     </xacro:if>
 
-  </xacro:macro>
 </robot>
