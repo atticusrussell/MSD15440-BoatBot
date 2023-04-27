@@ -73,7 +73,7 @@ hardware_interface::CallbackReturn CraftHardware::on_activate(
 {
   // TEST(anyone): prepare the robot to receive commands
   rudder_joint_.name = srv_cfg_.name;
-  rudder_joint_.servo = AngularServo(srv_cfg_.pin, srv_cfg_.min_angle, srv_cfg_.max_angle, srv_cfg_.min_pulse_width_us, srv_cfg_.max_pulse_width_us);
+  rudder_joint_.servo = std::make_unique<AngularServo>(srv_cfg_.pin, srv_cfg_.min_angle, srv_cfg_.max_angle, srv_cfg_.min_pulse_width_us, srv_cfg_.max_pulse_width_us);
   // srv_joint.servo = ang_srv_;
   return CallbackReturn::SUCCESS;
 }
@@ -83,7 +83,7 @@ hardware_interface::CallbackReturn CraftHardware::on_deactivate(
 {
   // TEST(anyone): prepare the robot to stop receiving commands
   // FUTURE maybe make a destructor for AngularServo?
-  rudder_joint_.servo.setPulseWidth(0);
+  rudder_joint_.servo->setPulseWidth(0);
 
   return CallbackReturn::SUCCESS;
 }
@@ -92,7 +92,7 @@ hardware_interface::return_type CraftHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   // TEST(anyone): read robot states
-  float currentAngleDegrees = rudder_joint_.servo.getAngle();
+  float currentAngleDegrees = rudder_joint_.servo->getAngle();
   // convert from degrees to radians
   rudder_joint_.pos = currentAngleDegrees * M_PI / 180;
 
@@ -106,7 +106,7 @@ hardware_interface::return_type CraftHardware::write(
   // FUTURE change function names to setAngleDeg and getAngleDeg
   // convert from radians to degrees
   float desiredAngleDegrees = rudder_joint_.cmd * 180 / M_PI;
-  rudder_joint_.servo.setAngle(desiredAngleDegrees);
+  rudder_joint_.servo->setAngle(desiredAngleDegrees);
 
   return hardware_interface::return_type::OK;
 }

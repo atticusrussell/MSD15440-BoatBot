@@ -18,6 +18,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "craft_hardware/visibility_control.h"
 #include "hardware_interface/system_interface.hpp"
@@ -47,7 +48,7 @@ struct ServoConfig
 struct ServoJoint
 {
   std::string name = "";
-  AngularServo servo;
+  std::unique_ptr<AngularServo> servo;
   double pos = 0;
   double cmd = 0;
 };
