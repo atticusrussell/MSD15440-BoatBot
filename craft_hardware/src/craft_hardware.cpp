@@ -14,7 +14,7 @@
 // limitations under the License.
 
 #include <limits>
-#include <pigpio.h>
+#include <pigpiod_if2.h>
 #include <vector>
 
 #include "craft_hardware/craft_hardware.hpp"
@@ -45,14 +45,23 @@ hardware_interface::CallbackReturn CraftHardware::on_configure(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to be ready for read calls and write calls of some interfaces
-  if (gpioInitialise() < 0) {
-   // pigpio initialisation failed.
-    return CallbackReturn::ERROR;
+  bool piGpiodRunning  = system("pgrep pigpiod");
+
+  if (piGpiodRunning == 0) {
+      // pigpiod daemon is running
+      return CallbackReturn::SUCCESS;
+  } else {
+      // pigpiod daemon is not running
+      return CallbackReturn::ERROR;
   }
-  else {
-   // pigpio initialised okay.
+}
+
+hardware_interface::CallbackReturn CraftHardware::on_cleanup(
+  const rclcpp_lifecycle::State & /*previous_state*/)
+{
+  // TEST(anyone): free resources, stop threads, etc.
+  pigpio_stop(rudder_joint_.servo->pi);
   return CallbackReturn::SUCCESS;
-  }
 }
 
 std::vector<hardware_interface::StateInterface> CraftHardware::export_state_interfaces()

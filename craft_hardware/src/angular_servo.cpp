@@ -1,16 +1,23 @@
-#include <pigpio.h>
 #include <iostream>
 #include <csignal>
 #include <cstdlib>
 #include <functional>
+#include <pigpiod_if2.h>
 #include "craft_hardware/angular_servo.hpp"
 
 using namespace std;
 
+// TODO revisit private vs protected vars - maybe swap to private 
+
 Servo::Servo(int pin) {
     __pin=pin;
+    int rcpi = pigpio_start(0, 0); // Connect to the pigpio daemon
+    if (rcpi < 0) {
+        throw "Cannot connect to pigpio daemon!";
+    }
+    pi = rcpi;
     int rc;
-    rc = gpioSetMode(__pin, PI_OUTPUT);
+    rc = set_mode(pi, __pin, PI_OUTPUT);
     if ( rc == PI_BAD_GPIO){
         throw "Invalid GPIO pin Error!";
     } else if ( rc == PI_BAD_MODE) {
@@ -18,7 +25,7 @@ Servo::Servo(int pin) {
     }
     
     // initializing to zero with pigpio is no input
-    rc = gpioServo(__pin, 0);
+    rc = set_servo_pulsewidth(pi, __pin, 0);
     if (rc == PI_BAD_USER_GPIO) {
         throw "Invalid user GPIO pin Error!";
     } else if (rc == PI_BAD_PULSEWIDTH) {
@@ -27,7 +34,7 @@ Servo::Servo(int pin) {
 }
 
 int Servo::getPulseWidth() {
-    int rc = gpioGetServoPulsewidth(__pin);
+    int rc = get_servo_pulsewidth(pi, __pin);
     if (rc == PI_BAD_USER_GPIO) {
         throw "Invalid user GPIO pin Error!";
     } else if (rc == PI_NOT_SERVO_GPIO) {
@@ -37,7 +44,7 @@ int Servo::getPulseWidth() {
 }
 
 void Servo::setPulseWidth(int pulseWidth){
-    int rc = gpioServo(__pin, pulseWidth);
+    int rc = set_servo_pulsewidth(pi, __pin, pulseWidth);
     if (rc == PI_BAD_USER_GPIO) {
         throw "Invalid user GPIO pin Error!";
     } else if (rc == PI_BAD_PULSEWIDTH) {
@@ -70,32 +77,4 @@ int AngularServo::getAngle(){
     int pulseWidth = getPulseWidth();
     float angle = __minAngle + (pulseWidth - __minPulseWidthUs) * (__maxAngle - __minAngle) / (__maxPulseWidthUs - __minPulseWidthUs);
     return angle;
-}
-
-bool isPigpiodRunning() {
-    int result = system("pgrep pigpiod");
-
-    if (result == 0) {
-        // pigpiod daemon is running
-        return true;
-    } else {
-        // pigpiod daemon is not running
-        return false;
-    }
-}
-
-void killPigpiod() {
-    if (isPigpiodRunning()) {
-        int result = system("sudo killall pigpiod -q");
-
-        if (result == 0) {
-            // Successfully killed the pigpiod daemon
-            std::cout << "pigpiod daemon killed successfully" << std::endl;
-        } else {
-            // An error occurred while trying to kill the pigpiod daemon
-            std::cerr << "Error killing pigpiod daemon. Return code: " << result << std::endl;
-        }
-    } else {
-        std::cout << "pigpiod daemon is not running" << std::endl;
-    }
 }

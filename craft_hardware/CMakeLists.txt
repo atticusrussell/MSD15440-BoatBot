@@ -12,7 +12,7 @@ find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 
-find_library(PIGPIO_LIB pigpio REQUIRED)
+find_library(PIGPIO_IF2_LIB pigpiod_if2 REQUIRED)
 
 add_library(
   craft_hardware
@@ -26,8 +26,8 @@ target_include_directories(
   include
 )
 
-# Add the PIGPIO_LIB to the target_link_libraries
-target_link_libraries(craft_hardware ${PIGPIO_LIB})
+# Add the PIGPIO_IF2_LIB to the target_link_libraries
+target_link_libraries(craft_hardware ${PIGPIO_IF2_LIB})
 
 ament_target_dependencies(
   craft_hardware

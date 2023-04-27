@@ -5,6 +5,7 @@ class Servo {
 		Servo(int pin);
 		int getPulseWidth();
 		void setPulseWidth(int pulseWidth);
+		int pi;
 
 	protected:
 		int __pin;
