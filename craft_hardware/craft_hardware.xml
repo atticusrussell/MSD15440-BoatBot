@@ -1,7 +1,7 @@
 <library path="craft_hardware">
-  <class name="craft_hardware/RudderServo"
-         type="craft_hardware::RudderServo"
-         base_class_type="hardware_interface::ActuatorInterface">
+  <class name="craft_hardware/CraftHardware"
+         type="craft_hardware::CraftHardware"
+         base_class_type="hardware_interface::SystemInterface">
     <description>
       ros2_control hardware interface.
     </description>
