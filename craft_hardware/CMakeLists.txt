@@ -12,16 +12,23 @@ find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 
+find_library(PIGPIO_LIB pigpio REQUIRED)
+
 add_library(
   craft_hardware
   SHARED
   src/craft_hardware.cpp
+  src/angular_servo.cpp
 )
 target_include_directories(
   craft_hardware
   PUBLIC
   include
 )
+
+# Add the PIGPIO_LIB to the target_link_libraries
+target_link_libraries(craft_hardware ${PIGPIO_LIB})
+
 ament_target_dependencies(
   craft_hardware
   hardware_interface

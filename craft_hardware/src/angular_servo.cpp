@@ -3,7 +3,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <functional>
-#include "angular_servo.hpp"
+#include "craft_hardware/angular_servo.hpp"
 
 using namespace std;
 
