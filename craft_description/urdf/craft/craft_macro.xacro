@@ -215,7 +215,7 @@
     </joint>
     <!-- joint 5 -->
     <joint name="${prefix}servo_joint" type="revolute">
-      <origin xyz="3.43338e-16 -0.005715 0.074295" rpy="${radians(90)} 0 -1.03735e-13" />
+      <origin xyz="3.43338e-16 -0.005715 0.074295" rpy="${radians(90)} ${radians(90)} -1.03735e-13" />
       <parent link="${prefix}servocargoassm" />
       <child link="${prefix}rudder" />
       <axis xyz="0 0 1" />
