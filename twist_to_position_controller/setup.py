@@ -1,4 +1,6 @@
 from setuptools import setup
+from glob import glob
+import os
 
 package_name = 'twist_to_position_controller'
 
@@ -20,6 +22,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'twist_to_position_node = twist_to_position_controller.twist_to_position_node:main',
         ],
     },
 )

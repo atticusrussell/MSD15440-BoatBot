@@ -3,7 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64MultiArray
 
 class TwistToPositionControllerNode(Node):
     def __init__(self):
@@ -16,15 +16,15 @@ class TwistToPositionControllerNode(Node):
             10
         )
 
-        self.publisher = self.create_publisher(Float64, 'position_controller/command', 10)
+        self.publisher = self.create_publisher(Float64MultiArray, 'forward_position_controller/commands', 10)
 
     def twist_callback(self, msg):
         angular_z = msg.angular.z
         self.publish_position(angular_z)
 
     def publish_position(self, angular_z):
-        position_msg = Float64()
-        position_msg.data = angular_z
+        position_msg = Float64MultiArray()
+        position_msg.data = [angular_z]
         self.publisher.publish(position_msg)
 
 def main(args=None):
