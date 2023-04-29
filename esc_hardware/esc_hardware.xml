@@ -1,0 +1,9 @@
+<library path="esc_hardware">
+  <class name="esc_hardware/EscHardware"
+         type="esc_hardware::EscHardware"
+         base_class_type="hardware_interface::ActuatorInterface">
+    <description>
+      ros2_control hardware interface.
+    </description>
+  </class>
+</library>
