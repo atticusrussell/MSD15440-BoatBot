@@ -24,54 +24,57 @@
           <plugin>ign_ros2_control/IgnitionSystem</plugin>
         </xacro:if>
         <xacro:unless value="${use_mock_hardware or sim_gazebo_classic or sim_gazebo}">
-          <plugin>robot_hardware_inteface/RobotHardwareInteface</plugin>
+          <plugin>craft_hardware/CraftHardware</plugin>
+          <param name="srv_name">servo_joint</param>
+          <param name="srv_pin">18</param>
+          <param name="srv_min_angle">0.0</param>
+          <param name="srv_max_angle">180.0</param>
+          <param name="srv_min_pulse_width_us">650</param>
+          <param name="srv_max_pulse_width_us">2500</param>
         </xacro:unless>
       </hardware>
       <joint name="${prefix}servo_joint">
-        <command_interface name="position"/>     <!-- Add/Remove interfaces as needed -->
+        <command_interface name="position"/>    
           <!-- TODO try re-enabling -->
           <!-- <param name="min">-1</param>
           <param name="max">1</param> -->
         <!-- </command_interface> -->
-        <state_interface name="position"/>
-          <!-- TODO try re-enabling -->
-          <!-- <param name="initial_value">0.0</param> -->
-        <!-- </state_interface> -->
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
       </joint>
-      <!-- TODO implement, replace unrealistic position -->
-			<!-- TODO swap to actuator maybe?  -->
+    <!-- FIXME when implement ESC, delete and re-join -->
+    </ros2_control>
+
+    <!-- FIXME when ESC implemented in controller, rejoin -->
+    <ros2_control name="${name}_esc" type="system">
+      <hardware>
+        <xacro:if value="${sim_gazebo_classic}">
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </xacro:if>
+        <xacro:if value="${sim_gazebo}">
+          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+        </xacro:if>
+        <!-- NOTE makes ESC always use mock hardware rn -->
+        <xacro:unless value="${sim_gazebo_classic or sim_gazebo}">
+          <plugin>mock_components/GenericSystem</plugin>
+          <param name="mock_sensor_commands">${mock_sensor_commands}</param>
+        </xacro:unless>
+      </hardware>
+      
+      <!-- TODO implement, replace unrealistic position - swap to actuator maybe -->
       <joint name="${prefix}propeller_joint">
-        <command_interface name="velocity">     <!-- Add/Remove interfaces as needed -->
+        <command_interface name="velocity">    
           <param name="min">-10</param>
           <param name="max">10</param>
         </command_interface>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">0.0</param>
+        </state_interface>
       </joint>
-      
-      <!-- Remove/change sensors as needed -->
-      <!-- <sensor name="tcp_fts_sensor">            
-        <state_interface name="fx"/>
-        <state_interface name="fy"/>
-        <state_interface name="fz"/>
-        <state_interface name="tx"/>
-        <state_interface name="ty"/>
-        <state_interface name="tz"/> -->
-        <!-- Change sensors as needed -->
-        <!-- <param name="frame_id">tool0</param>    
-        <param name="min_fx">-100</param>
-        <param name="max_fx">100</param>
-        <param name="min_fy">-100</param>
-        <param name="max_fy">100</param>
-        <param name="min_fz">-200</param>
-        <param name="max_fz">200</param>
-        <param name="min_tx">-10</param>
-        <param name="max_tx">10</param>
-        <param name="min_ty">-10</param>
-        <param name="max_ty">10</param>
-        <param name="min_tz">-15</param>
-        <param name="max_tz">15</param>
-      </sensor> -->
     </ros2_control>
 
     <xacro:if value="$(arg sim_gazebo_classic)">

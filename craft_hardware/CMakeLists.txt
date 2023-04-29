@@ -12,16 +12,23 @@ find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 
+find_library(PIGPIO_IF2_LIB pigpiod_if2 REQUIRED)
+
 add_library(
   craft_hardware
   SHARED
-  src/rudderServo.cpp
+  src/craft_hardware.cpp
+  src/angular_servo.cpp
 )
 target_include_directories(
   craft_hardware
   PUBLIC
   include
 )
+
+# Add the PIGPIO_IF2_LIB to the target_link_libraries
+target_link_libraries(craft_hardware ${PIGPIO_IF2_LIB})
+
 ament_target_dependencies(
   craft_hardware
   hardware_interface
@@ -60,10 +67,10 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gmock REQUIRED)
   find_package(ros2_control_test_assets REQUIRED)
 
-  ament_add_gmock(test_rudderServo test/test_rudderServo.cpp)
-  target_include_directories(test_rudderServo PRIVATE include)
+  ament_add_gmock(test_craft_hardware test/test_craft_hardware.cpp)
+  target_include_directories(test_craft_hardware PRIVATE include)
   ament_target_dependencies(
-    test_rudderServo
+    test_craft_hardware
     hardware_interface
     pluginlib
     ros2_control_test_assets

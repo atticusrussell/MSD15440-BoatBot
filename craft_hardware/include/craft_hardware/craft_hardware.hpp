@@ -1,4 +1,5 @@
-// Copyright (c) 2022, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
+// Copyright (c) 2023, Atticus Russell
+// Copyright (c) 2023, Stogl Robotics Consulting UG (haftungsbeschränkt) (template)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +13,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CRAFT_HARDWARE__RUDDERSERVO_HPP_
-#define CRAFT_HARDWARE__RUDDERSERVO_HPP_
+#ifndef CRAFT_HARDWARE__CRAFT_HARDWARE_HPP_
+#define CRAFT_HARDWARE__CRAFT_HARDWARE_HPP_
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "craft_hardware/visibility_control.h"
-#include "hardware_interface/actuator_interface.hpp"
+#include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 
+#include "craft_hardware/angular_servo.hpp"
+
 namespace craft_hardware
 {
-class RudderServo : public hardware_interface::ActuatorInterface
+class CraftHardware : public hardware_interface::SystemInterface
 {
+
+struct ServoConfig
+{
+  std::string name = "";
+  int pin = 0;
+  int pi = 0;
+  float min_angle = 0.0;
+  float max_angle = 0.0;
+  int min_pulse_width_us = 0;
+  int max_pulse_width_us = 0;
+};
+
+struct ServoJoint
+{
+  std::string name = "";
+  std::unique_ptr<AngularServo> servo;
+  double pos = 0;
+  double cmd = 0;
+};
+
 public:
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
   hardware_interface::CallbackReturn on_init(
@@ -37,6 +61,10 @@ public:
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
   hardware_interface::CallbackReturn on_configure(
+    const rclcpp_lifecycle::State & previous_state) override;
+
+  TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
+  hardware_interface::CallbackReturn on_cleanup(
     const rclcpp_lifecycle::State & previous_state) override;
 
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
@@ -62,10 +90,10 @@ public:
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
-  std::vector<double> hw_commands_;
-  std::vector<double> hw_states_;
+  ServoConfig srv_cfg_;
+  ServoJoint rudder_joint_;
 };
 
 }  // namespace craft_hardware
 
-#endif  // CRAFT_HARDWARE__RUDDERSERVO_HPP_
+#endif  // CRAFT_HARDWARE__CRAFT_HARDWARE_HPP_

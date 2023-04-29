@@ -73,7 +73,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "use_mock_hardware",
-            default_value="true",
+            default_value="false",
             description="Start robot with mock hardware mirroring command to its states.",
         )
     )
@@ -246,7 +246,7 @@ def generate_launch_description():
         + [
             control_node,
             robot_state_pub_node,
-            delay_rviz_after_inactive_controllers_spawner,
+            # delay_rviz_after_inactive_controllers_spawner,
             delay_joint_state_broadcaster_spawner_after_ros2_control_node,
         ]
         + delay_robot_controller_spawners_after_joint_state_broadcaster_spawner
