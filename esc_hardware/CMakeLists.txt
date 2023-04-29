@@ -28,7 +28,7 @@ target_include_directories(
 )
 
 # Add the PIGPIO_IF2_LIB to the target_link_libraries
-target_link_libraries(craft_hardware ${PIGPIO_IF2_LIB})
+target_link_libraries(esc_hardware ${PIGPIO_IF2_LIB})
 
 ament_target_dependencies(
   esc_hardware

@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <functional>
 #include <pigpiod_if2.h>
-#include "craft_hardware/angular_servo.hpp"
+#include "esc_hardware/angular_servo.hpp"
 
 using namespace std;
 
