@@ -20,11 +20,15 @@ class TwistToPositionControllerNode(Node):
 
     def twist_callback(self, msg):
         angular_z = msg.angular.z
-        self.publish_position(angular_z)
+        mapped_angular_z = self.map_angular_z(angular_z)
+        self.publish_position(mapped_angular_z)
 
-    def publish_position(self, angular_z):
+    def map_angular_z(self, angular_z):
+        return (1- angular_z) * 3.14 / 2
+
+    def publish_position(self, mapped_angular_z):
         position_msg = Float64MultiArray()
-        position_msg.data = [angular_z]
+        position_msg.data = [mapped_angular_z]
         self.publisher.publish(position_msg)
 
 def main(args=None):
