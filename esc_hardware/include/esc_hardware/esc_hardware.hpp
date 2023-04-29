@@ -27,10 +27,37 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 
+// #include "esc_hardware/angular_servo.hpp"
+#include "esc_hardware/esc.hpp"
+
 namespace esc_hardware
 {
 class EscHardware : public hardware_interface::ActuatorInterface
 {
+
+struct ESCConfig
+{
+  std::string name = "";
+  int pi = 0;
+  int pwmPin = 0;
+  int fullRevThrottle = 0;
+  int fullFwdThrottle = 0;
+  int minPulseWidth_us = 0;
+  int maxPulseWidth_us = 0;
+  int powerPin = 0;
+  int neutralThrottle = 0;
+  float minFwdThrottle = 0;
+  float minRevThrottle = 0;
+};
+
+struct PropJoint
+{
+  std::string name = "";
+  std::unique_ptr<ESC> esc;
+  double vel = 0;
+  double cmd = 0;
+};
+
 public:
   TEMPLATES__ROS2_CONTROL__VISIBILITY_PUBLIC
   hardware_interface::CallbackReturn on_init(
@@ -65,6 +92,8 @@ public:
 private:
   std::vector<double> hw_commands_;
   std::vector<double> hw_states_;
+  ESCConfig esc_cfg_;
+  PropJoint prop_joint_;
 };
 
 }  // namespace esc_hardware
