@@ -16,6 +16,7 @@
 #include <limits>
 #include <pigpiod_if2.h>
 #include <vector>
+#include <unistd.h>
 
 #include "craft_hardware/craft_hardware.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
@@ -45,9 +46,11 @@ hardware_interface::CallbackReturn CraftHardware::on_configure(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TODO(anyone): prepare the robot to be ready for read calls and write calls of some interfaces
-  bool piGpiodRunning  = system("pgrep pigpiod");
+  if (!isPigpiodRunning()) {
+        startPigpiod();
+    }
 
-  if (piGpiodRunning == 0) {
+  if (isPigpiodRunning()) {
       // pigpiod daemon is running
       return CallbackReturn::SUCCESS;
   } else {
@@ -60,7 +63,7 @@ hardware_interface::CallbackReturn CraftHardware::on_cleanup(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   // TEST(anyone): free resources, stop threads, etc.
-  pigpio_stop(rudder_joint_.servo->pi);
+  pigpio_stop(rudder_joint_.servo->__pi);
   return CallbackReturn::SUCCESS;
 }
 
@@ -89,9 +92,15 @@ hardware_interface::CallbackReturn CraftHardware::on_activate(
 {
   // TEST(anyone): prepare the robot to receive commands
   rudder_joint_.name = srv_cfg_.name;
-  rudder_joint_.servo = std::make_unique<AngularServo>(srv_cfg_.pin, srv_cfg_.min_angle, srv_cfg_.max_angle, srv_cfg_.min_pulse_width_us, srv_cfg_.max_pulse_width_us);
-  // srv_joint.servo = ang_srv_;
-  return CallbackReturn::SUCCESS;
+  srv_cfg_.pi = pigpio_start(NULL, NULL);
+  if (srv_cfg_.pi < 0) {
+      // TODO maybe make ros log error
+      std::cerr << "Error initializing pigpio" << std::endl;
+      return CallbackReturn::ERROR;
+  } else {
+    rudder_joint_.servo = std::make_unique<AngularServo>(srv_cfg_.pi, srv_cfg_.pin, srv_cfg_.min_angle, srv_cfg_.max_angle, srv_cfg_.min_pulse_width_us, srv_cfg_.max_pulse_width_us);
+    return CallbackReturn::SUCCESS;
+  }
 }
 
 hardware_interface::CallbackReturn CraftHardware::on_deactivate(

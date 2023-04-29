@@ -39,6 +39,7 @@ struct ServoConfig
 {
   std::string name = "";
   int pin = 0;
+  int pi = 0;
   float min_angle = 0.0;
   float max_angle = 0.0;
   int min_pulse_width_us = 0;

@@ -2,18 +2,18 @@
 
 class Servo {
 	public:
-		Servo(int pin);
+		Servo(int pi, int pin);
 		int getPulseWidth();
 		void setPulseWidth(int pulseWidth);
-		int pi;
 
+		int __pi; // TODO rename to indicate public, and pigpio pi
 	protected:
 		int __pin;
 };
 
 class AngularServo : public Servo {
 	public:
-		AngularServo(int pin, float minAngle, float maxAngle, int minPulseWidthUs, int maxPulseWidthUs);
+		AngularServo(int pi, int pin, float minAngle, float maxAngle, int minPulseWidthUs, int maxPulseWidthUs);
 		void setAngle(float angle);
 		int getAngle();
 
@@ -24,3 +24,8 @@ class AngularServo : public Servo {
 		int __minPulseWidthUs;
 		int __maxPulseWidthUs;
 };
+
+bool isPigpiodRunning();
+void killPigpiod();
+void startPigpiod();
+
