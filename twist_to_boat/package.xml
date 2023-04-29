@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>twist_to_position_controller</name>
+  <name>twist_to_boat</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="atticusrussell@gmail.com">atticus</maintainer>
