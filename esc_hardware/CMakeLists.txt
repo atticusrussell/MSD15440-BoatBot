@@ -12,16 +12,24 @@ find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 
+find_library(PIGPIO_IF2_LIB pigpiod_if2 REQUIRED)
+
 add_library(
   esc_hardware
   SHARED
   src/esc_hardware.cpp
+  src/angular_servo.cpp
+  src/esc.cpp
 )
 target_include_directories(
   esc_hardware
   PUBLIC
   include
 )
+
+# Add the PIGPIO_IF2_LIB to the target_link_libraries
+target_link_libraries(craft_hardware ${PIGPIO_IF2_LIB})
+
 ament_target_dependencies(
   esc_hardware
   hardware_interface
