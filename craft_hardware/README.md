@@ -6,6 +6,3 @@ need to be have pigpiod daemon running for access to RPi GPIO
 
 Pluginlib-Library: craft_hardware
 Plugin: craft_hardware/CraftHardware (hardware_interface::SystemInterface)
-
-Pluginlib-Library: craft_hardware
-Plugin: craft_hardware/EscHardware (hardware_interface::ActuatorInterface)
