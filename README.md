@@ -1,7 +1,10 @@
-msd15440_craft
-==========================================
+# Autonomous Boat To Seek Radio Beacon
+Uses ROS2
 
-ROS autonomous boat to seek radio beacon
+Created by Multidisciplinary Senior Design team 15440 at Rochester Institute of Technology.  
+The goal of this project is to compete in the NASA Micro-g NExT SAVER (Surface Autonomous Vehicle for Emergency Response) challenge.
+
+2022-2023 MSD15440 project is over, but work in progress to provide future MSD teams working on this project with a solid foundation.
 
 ![Licence](https://img.shields.io/badge/License-MIT-blue.svg)
 
